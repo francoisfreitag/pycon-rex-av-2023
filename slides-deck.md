@@ -19,15 +19,27 @@ footer {
 
 # GIP de l’inclusion
 
+<style scoped>
+p > img {
+    background-color: #222;
+    padding: 7px;
+    margin-right: 15px;
+    border-radius: 10px;
+}
+</style>
+
+
 > Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
 
 ——————————————————————————————————————
 
 #### François Freitag
 
-![height:50px](https://www.python.org/static/img/python-logo.png)       ![height:50px](https://infooptima.net/wp-content/uploads/2016/02/Django-logo.svg_.png)          ![height:50px](https://www.sphinx-doc.org/en/master/_static/sphinxheader.png)
+[mail@franek.fr](mailto:mail@franek.fr)
 
-📧 [mail@franek.fr](mailto:mail@franek.fr)
+![height:40px](https://www.python.org/static/img/python-logo.png) ![height:40px](https://infooptima.net/wp-content/uploads/2016/02/Django-logo.svg_.png) ![height:40px](https://www.sphinx-doc.org/en/master/_static/sphinxheader.png)
+
+
 
 ---
 # Contexte
