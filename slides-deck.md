@@ -5,7 +5,6 @@ paginate: true
 theme: gaia
 title: REX analyse antivirus des fichiers de la plateforme des emplois de l’inclusion
 ---
-<!-- class: invert -->
 <style>
 footer {
     display: flex;
@@ -33,7 +32,7 @@ footer {
 ---
 # Contexte
 
-- 500 000+ fichiers PDF 📈
+* 500 000+ fichiers PDF 📈
 * Envoyés directement sur Cellar (S3)
 * Pas de latence perceptible à l’envoi (exigence métier)
 * Analyse quotidienne
@@ -135,6 +134,12 @@ Que nous apporte la base de données ?
 * Gestion de la concurrence
 * Le meilleur ?
     * Elle est déjà en place.
+
+---
+# Je veux voir le code !
+
+C’est open-source.
+https://github.com/betagouv/itou/blob/master/itou/antivirus/management/commands/scan_s3_files.py
 
 ---
 
