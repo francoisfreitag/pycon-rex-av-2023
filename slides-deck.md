@@ -12,13 +12,6 @@ footer {
 }
 </style>
 
-# REX analyse antivirus
-#### des fichiers de la plateforme des emplois de l’inclusion
-
----
-
-# GIP de l’inclusion
-
 <style scoped>
 p > img {
     background-color: #222;
@@ -26,141 +19,188 @@ p > img {
     margin-right: 15px;
     border-radius: 10px;
 }
+p {
+text-align: center;
+}
 </style>
 
-
-> Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
+# REX analyse antivirus
+#### des fichiers de la plateforme des emplois de l’inclusion
 
 ——————————————————————————————————————
 
-#### François Freitag
-
+François Freitag
 [mail@franek.fr](mailto:mail@franek.fr)
 
 ![height:40px](https://www.python.org/static/img/python-logo.png) ![height:40px](https://infooptima.net/wp-content/uploads/2016/02/Django-logo.svg_.png) ![height:40px](https://www.sphinx-doc.org/en/master/_static/sphinxheader.png)
 
+---
 
+# Groupement Intérêt Public de l’inclusion
+
+<style scoped>
+p > img {
+    margin: auto;
+}
+</style>
+
+<!-- todo: center -->
+![width:200px](https://inclusion.beta.gouv.fr/images/logo-ministere-emploi.svg)
+
+> Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
 
 ---
-# Contexte
+# Les emplois de l’inclusion
 
-* 500 000+ fichiers PDF 📈
-* Envoyés directement sur Cellar (S3)
+> Les emplois de l'inclusion est un service numérique de délivrance des PASS IAE et de **mise en relation d'employeurs solidaires avec des candidats éloignés de l'emploi** par le biais de tiers (prescripteurs habilités, orienteurs) ou en autoprescription.
+
+- Gestion des candidatures
+- Orientation des candidats
+- Délivrance de PASS IAE (subvention à l’embauche)
+
+---
+# Audit de sécurité
+
+Pas de vérification antivirus des fichiers servis par la plateforme.
+
+---
+# Contraintes pour l’analyse antivirus
+
+* 500 000+ documents
 * Pas de latence perceptible à l’envoi (exigence métier)
-* Analyse quotidienne
-* Analyse complète mensuelle (évolution signature virus)
+* Envoi direct des documents sur S3 pour des raisons historiques
 
 ---
 # L’antivirus
 ![height:200px](https://www.clamav.net/assets/clamav-trademark.png)
 
 - Gratuit et open-source
-- CleverCloud `CC_CLAMAV=1`
+- Utilisé dans d’autres start-ups d’État
+- CleverCloud : `CC_CLAMAV=1`
 
 ---
-# Performances
+# Test de performance de ClamAV
 
-Échantillon de 10 000 fichiers aléatoires
+Échantillon de 10 000 fichiers aléatoires.
+
 Temps d’analyse par fichier :
-- 1 seconde en moyenne
-- 20 secondes au pire
+- En moyenne : 1 seconde
+- Maximum : 20 secondes
 
-⇒ Pas d’analyse directement lors de la requête HTTP
-
----
-# Intégration à la plateforme
-
-Informations utiles :
-
-- horodatage de l’analyse
-- résultat de l’analyse
-- confirmation manuelle
-- commentaire
+Latence perceptible ⇒ pas d’analyse lors de la requête HTTP
 
 ---
-# Intégration à la plateforme
-
-L’`admin` Django :
-<!-- Screenshot admin ? -->
+# Schéma d’analyse
+- Analyse quotidienne des nouveaux fichiers
+- Analyse mensuelle de tous les fichiers : nouvelles signatures de virus
 
 ---
-# Analyse des fichiers
+# Analyse des fichiers *a minima*
 
-`cron`
+`cron` : pas de latence perceptible, mais moins de sécurité.
 
 * Identifie les fichiers à analyser
-* Les télécharge : `ThreadPoolExecutor` :heart:
-* Analyse avec ClamAV : `subprocess.run()` :heart:
-* Enregistre le résultat : *ORM* Django :heart:
+* Les télécharge : `ThreadPoolExecutor` + `TemporaryDirectory` :heart:
+* Analyse avec ClamAV : `subprocess.run()`
+* Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
 ---
-# Solution *a minima*
+# Mise en prod de la version *a minima*
 
 - Analyse quotidienne des nouveaux fichiers
-    * Parcours des objets Cellar (S3) : environ 5 minutes
+    * Parcours des objets S3 : environ 5 minutes
     * Analyse : environ 5 minutes
 - Analyse mensuelle de tous les fichiers
-    * Parcours des objets Cellar (S3) : environ 5 minutes
-    * Analyse : environ 17 280 minutes *(ou 3 jours)*
-* Oops : interruptions lors du déploiement (`SIGTERM` après 90 s)
+    * Parcours des objets S3 : environ 5 minutes
+    * Analyse : environ **17 280 minutes** *(ou 3 jours)*
+    * `SIGTERM` lors des déploiements chez CleverCloud (ZDD)
 
 ---
-#  Pas très satisfaisant… 🤔
+#  Pas très satisfaisant…
 
-Gestion des interruptions liées au `SIGTERM` du déploiement
-- Pas de déploiement pendant 3 jours ? 🤨
-* Mécanisme de reprise
-    * Gestion de `SIGTERM` ?
-        * Gestion de signal ⚠, quid crash sans `SIGTERM` ?
-    * Acquittement ?
-        * Sous quel délai ?
+Comment éviter les interruptions liées au déploiement ? 🤔
+
+* Pas de déploiement pendant 3 jours 🤨
+* Création d’un mécanisme de reprise
+    * Gestion du signal `SIGTERM` ⚠🐉
+    * Quid d’un échec sans `SIGTERM` ?
+    * Acquittement : sous quel délai ?
+    * La réponse “D” : réfléchir plus
 
 ---
-# Analyse des fichiers (mieux)
+# Analyse des fichiers (en mieux)
 `cron`
 - Identifie **mieux** les fichiers à analyser
-- Les télécharge : `ThreadPoolExecutor` :heart:
-- Analyse avec ClamAV : `subprocess.run()` :heart:
-- Enregistre le résultat : *ORM* Django :heart:
+- Les télécharge : `ThreadPoolExecutor` + `TemporaryDirectory` :heart:
+- Analyse avec ClamAV : `subprocess.run()`
+- Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
 ---
-# Analyse des fichiers (mieux)
+# Analyse des fichiers (en mieux)
 
 **Une fois par jour**
 
-`cron` synchro *Cellar* (S3) → base de données
+`cron` synchronisation S3 → base de données
 
-**Fréquemment**
+---
+# Analyse des fichiers (en mieux)
 
-Sélection d’un lot de fichiers récents, ou horodatage >= un mois
+**Une fois par jour**
+
+`cron` synchronisation S3 → base de données
+
+**Plein de fois par jour**
+
+Sélection d’un lot de fichiers (récents ou dernière analyse > un mois)
 
 ```python
 select_for_update(skip_locked=True, no_key=True)
 ```
 
 ---
-# Analyse des fichiers (mieux)
+# Analyse des fichiers (en mieux)
 
 Que nous apporte la base de données ?
 * Nettoyage automatique du verrou en cas d’échec
 * Gestion de la concurrence
-* Le meilleur ?
+* Cerise sur le gâteau ?
     * Elle est déjà en place.
 
 ---
-# Je veux voir le code !
+# Une analyse dans l’admin Django
 
-C’est open-source.
-https://github.com/betagouv/itou/blob/master/itou/antivirus/management/commands/scan_s3_files.py
+<!-- Screenshot admin -->
 
 ---
+# Le résultat 🥁
 
-# Aller plus loin ?
+624 375 fichiers scannés pour trouver…
+
+---
+<style scoped>
+h2 {text-align: center}
+</style>
+# Le résultat 🥁
+
+624 375 fichiers scannés pour trouver…
+
+## 0 virus 🕺
+
+---
+# Comment aller plus loin ?
 
 - Stocker les fichiers via Django
-- Gestion des fichiers infectés : *API* VirusTotal
-- Zone de quarantaine Cellar
+- Zone de quarantaine S3
 - Parallélisation des analyses
+- Gestion des fichiers infectés : *API* VirusTotal
+
+---
+# Je peux voir le code ?
+
+C’est open-source, ça fait 129 lignes.
+
+<!-- QR Code -->
+https://github.com/betagouv/itou/blob/master/itou/antivirus/management/commands/scan_s3_files.py
 
 ---
 <style scoped>
