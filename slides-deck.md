@@ -15,19 +15,23 @@ footer {
 <style scoped>
 p > img {
     background-color: #222;
-    padding: 7px;
+    padding: 5px;
+    margin-top: 40px;
     margin-right: 15px;
     border-radius: 10px;
 }
+
 p {
-text-align: center;
+    text-align: center;
+    align: center;
 }
 </style>
 
+<!-- _paginate: false -->
 # REX analyse antivirus
 #### des fichiers de la plateforme des emplois de l’inclusion
 
-——————————————————————————————————————
+![width:900px](./divider.png)
 
 François Freitag
 [mail@franek.fr](mailto:mail@franek.fr)
@@ -35,19 +39,19 @@ François Freitag
 ![height:40px](https://www.python.org/static/img/python-logo.png) ![height:40px](https://infooptima.net/wp-content/uploads/2016/02/Django-logo.svg_.png) ![height:40px](https://www.sphinx-doc.org/en/master/_static/sphinxheader.png)
 
 ---
-
-# Groupement Intérêt Public de l’inclusion
-
 <style scoped>
+h1 > img {float: right;}
 p > img {
-    margin: auto;
+margin-left: 450px;
 }
 </style>
 
-<!-- todo: center -->
-![width:200px](https://inclusion.beta.gouv.fr/images/logo-ministere-emploi.svg)
+# Plateforme de l’inclusion ![width:200px](./logo-plateforme-inclusion.svg)
+
 
 > Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
+
+![width:250px](https://inclusion.beta.gouv.fr/images/logo-ministere-emploi.svg)
 
 ---
 # Les emplois de l’inclusion
@@ -167,9 +171,14 @@ Que nous apporte la base de données ?
     * Elle est déjà en place.
 
 ---
+<style scoped>
+p > img {
+    margin-left: 300px;
+}
+</style>
 # Une analyse dans l’admin Django
 
-<!-- Screenshot admin -->
+![height:400px](./admin-detail.png)
 
 ---
 # Le résultat 🥁
