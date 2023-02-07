@@ -1,6 +1,6 @@
 ---
 author: François Freitag
-footer: PyConFr 2023 ![height:40px](https://inclusion.beta.gouv.fr/images/logo-emplois.svg)
+footer: PyConFr 2023 ![height:40px](./logo-emplois.svg)
 paginate: true
 theme: gaia
 title: REX analyse antivirus des fichiers de la plateforme des emplois de l’inclusion
@@ -31,27 +31,28 @@ p {
 # REX analyse antivirus
 #### des fichiers de la plateforme des emplois de l’inclusion
 
-![width:900px](./divider.png)
+![width:900px](divider.png)
 
 François Freitag
 [mail@franek.fr](mailto:mail@franek.fr)
 
-![height:40px](https://www.python.org/static/img/python-logo.png) ![height:40px](https://infooptima.net/wp-content/uploads/2016/02/Django-logo.svg_.png) ![height:40px](https://www.sphinx-doc.org/en/master/_static/sphinxheader.png)
+![height:40px](python-logo.png) ![height:40px](django-logo.png) ![height:40px](sphinxheader.webp)
 
 ---
 <style scoped>
 h1 > img {float: right;}
 p > img {
 margin-left: 450px;
+margin-top: 50px;
 }
 </style>
 
-# Plateforme de l’inclusion ![width:200px](./logo-plateforme-inclusion.svg)
+# Plateforme de l’inclusion ![width:200px](logo-plateforme-inclusion.svg)
 
 
 > Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
 
-![width:250px](https://inclusion.beta.gouv.fr/images/logo-ministere-emploi.svg)
+![width:250px](logo-ministere-emploi.svg)
 
 ---
 # Les emplois de l’inclusion
@@ -76,7 +77,7 @@ Pas de vérification antivirus des fichiers servis par la plateforme.
 
 ---
 # L’antivirus
-![height:200px](https://www.clamav.net/assets/clamav-trademark.png)
+![height:200px](clamav-trademark.webp)
 
 - Gratuit et open-source
 - Utilisé dans d’autres start-ups d’État
@@ -94,16 +95,18 @@ Temps d’analyse par fichier :
 Latence perceptible ⇒ pas d’analyse lors de la requête HTTP
 
 ---
-# Schéma d’analyse
-- Analyse quotidienne des nouveaux fichiers
-- Analyse mensuelle de tous les fichiers : nouvelles signatures de virus
+# Analyse périodique
+
+- Pas de latence perceptible, mais moins de sécurité.
+- Quotidienne des nouveaux fichiers
+- Mensuelle de tous les fichiers : nouvelles signatures de virus
 
 ---
-# Analyse des fichiers *a minima*
+# Analyse *a minima*
 
-`cron` : pas de latence perceptible, mais moins de sécurité.
+`cron` :
 
-* Identifie les fichiers à analyser
+* Identifie les fichiers à analyser (filtre S3)
 * Les télécharge : `ThreadPoolExecutor` + `TemporaryDirectory` :heart:
 * Analyse avec ClamAV : `subprocess.run()`
 * Enregistre le résultat dans la base de données : *ORM* Django :heart:
@@ -129,10 +132,10 @@ Comment éviter les interruptions liées au déploiement ? 🤔
     * Gestion du signal `SIGTERM` ⚠🐉
     * Quid d’un échec sans `SIGTERM` ?
     * Acquittement : sous quel délai ?
-    * La réponse “D” : réfléchir plus
+    * La réponse “D” : réfléchir plus…
 
 ---
-# Analyse des fichiers (en mieux)
+# Analyse (en mieux)
 `cron`
 - Identifie **mieux** les fichiers à analyser
 - Les télécharge : `ThreadPoolExecutor` + `TemporaryDirectory` :heart:
@@ -140,14 +143,14 @@ Comment éviter les interruptions liées au déploiement ? 🤔
 - Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
 ---
-# Analyse des fichiers (en mieux)
+# Analyse (en mieux)
 
 **Une fois par jour**
 
 `cron` synchronisation S3 → base de données
 
 ---
-# Analyse des fichiers (en mieux)
+# Analyse (en mieux)
 
 **Une fois par jour**
 
@@ -162,7 +165,7 @@ select_for_update(skip_locked=True, no_key=True)
 ```
 
 ---
-# Analyse des fichiers (en mieux)
+# Analyse (en mieux)
 
 Que nous apporte la base de données ?
 * Nettoyage automatique du verrou en cas d’échec
@@ -178,7 +181,7 @@ p > img {
 </style>
 # Une analyse dans l’admin Django
 
-![height:400px](./admin-detail.png)
+![height:400px](admin-detail.png)
 
 ---
 # Le résultat 🥁
