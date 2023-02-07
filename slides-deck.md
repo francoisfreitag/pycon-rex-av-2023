@@ -1,6 +1,6 @@
 ---
 author: François Freitag
-footer: PyConFr 2023 ![height:40px](./logo-emplois.svg)
+footer: PyConFr 2023 ![height:40px](img/logo-emplois.svg)
 paginate: true
 theme: gaia
 title: REX analyse antivirus des fichiers de la plateforme des emplois de l’inclusion
@@ -31,12 +31,12 @@ p {
 # REX analyse antivirus
 #### des fichiers de la plateforme des emplois de l’inclusion
 
-![width:900px](divider.png)
+![width:900px](img/divider.png)
 
 François Freitag
 [mail@franek.fr](mailto:mail@franek.fr)
 
-![height:40px](python-logo.png) ![height:40px](django-logo.png) ![height:40px](sphinxheader.webp)
+![height:40px](img/python-logo.png) ![height:40px](img/django-logo.png) ![height:40px](img/sphinxheader.webp)
 
 ---
 <style scoped>
@@ -47,12 +47,12 @@ margin-top: 50px;
 }
 </style>
 
-# Plateforme de l’inclusion ![width:200px](logo-plateforme-inclusion.svg)
+# Plateforme de l’inclusion ![width:200px](img/logo-plateforme-inclusion.svg)
 
 
 > Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
 
-![width:250px](logo-ministere-emploi.svg)
+![width:250px](img/logo-ministere-emploi.svg)
 
 ---
 # Les emplois de l’inclusion
@@ -77,7 +77,7 @@ Pas de vérification antivirus des fichiers servis par la plateforme.
 
 ---
 # L’antivirus
-![height:200px](clamav-trademark.webp)
+![height:200px](img/clamav-trademark.webp)
 
 - Gratuit et open-source
 - Utilisé dans d’autres start-ups d’État
@@ -181,7 +181,7 @@ p > img {
 </style>
 # Une analyse dans l’admin Django
 
-![height:400px](admin-detail.png)
+![height:400px](img/admin-detail.png)
 
 ---
 # Le résultat 🥁
