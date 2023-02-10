@@ -1,6 +1,6 @@
 ---
 author: François Freitag
-footer: PyConFr 2023 ![height:40px](img/logo-emplois.svg)
+footer: PyConFR 2023 ![height:40px](img/logo-emplois.svg)
 paginate: true
 theme: gaia
 title: REX analyse antivirus des fichiers de la plateforme des emplois de l’inclusion
@@ -40,51 +40,76 @@ François Freitag
 
 ---
 <style scoped>
-h1 > img {float: right;}
-p > img {
-margin-left: 450px;
-margin-top: 50px;
+ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+}
+li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1em;
+}
+li > a {
+    margin-top: 0.7em;
 }
 </style>
 
-# Plateforme de l’inclusion ![width:200px](img/logo-plateforme-inclusion.svg)
-
+# Plateforme de l’inclusion
 
 > Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
 
-![width:250px](img/logo-ministere-emploi.svg)
+- ![height:120px](img/logo-plateforme-inclusion.svg) https://inclusion.beta.gouv.fr/
+- ![height:120px](img/beta-gouv.png) https://beta.gouv.fr/
 
 ---
+<style scoped>
+ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+</style>
+
 # Les emplois de l’inclusion
 
-> Les emplois de l'inclusion est un service numérique de délivrance des PASS IAE et de **mise en relation d'employeurs solidaires avec des candidats éloignés de l'emploi** par le biais de tiers (prescripteurs habilités, orienteurs) ou en autoprescription.
+> Mise en relation d'employeurs solidaires avec des candidats éloignés de l'emploi.
 
-- Gestion des candidatures
-- Orientation des candidats
-- Délivrance de PASS IAE (subvention à l’embauche)
+Code open-source : https://github.com/betagouv/itou/
+
+* Gestion des candidatures : **CV 🖹**
 
 ---
+<style scoped>
+h2 {
+font-size: 200px;
+text-align: center;
+margin-top: 50px;
+}
+</style>
 # Audit de sécurité
 
-Pas de vérification antivirus des fichiers servis par la plateforme.
+⚠ Pas de vérification antivirus des fichiers servis par la plateforme.
+
+## 🐛 🖹 ?
 
 ---
 # Contraintes pour l’analyse antivirus
 
-* 500 000+ documents
+* 500 000+ **🖹**
 * Pas de latence perceptible à l’envoi (exigence métier)
 * Envoi direct des documents sur S3 pour des raisons historiques
 
 ---
-# L’antivirus
+# Quel antivirus ?
 ![height:200px](img/clamav-trademark.webp)
 
 - Gratuit et open-source
 - Utilisé dans d’autres start-ups d’État
-- CleverCloud : `CC_CLAMAV=1`
+- *PaaS* CleverCloud : `CC_CLAMAV=1`
 
 ---
-# Test de performance de ClamAV
+# Test de performance de ClamAV :turtle:
 
 Échantillon de 10 000 fichiers aléatoires.
 
@@ -92,14 +117,15 @@ Temps d’analyse par fichier :
 - En moyenne : 1 seconde
 - Maximum : 20 secondes
 
-Latence perceptible ⇒ pas d’analyse lors de la requête HTTP
+**Latence perceptible** ⇒ pas d’analyse à l’envoi (requête HTTP)
 
 ---
-# Analyse périodique
+# Analyse périodique 🕰
 
-- Pas de latence perceptible, mais moins de sécurité.
-- Quotidienne des nouveaux fichiers
-- Mensuelle de tous les fichiers : nouvelles signatures de virus
+Pas de latence perceptible, mais moins de sécurité.
+
+- **Quotidienne** des **nouveaux** fichiers
+- **Mensuelle** de tous les fichiers : nouvelles signatures de virus
 
 ---
 # Analyse *a minima*
@@ -108,19 +134,19 @@ Latence perceptible ⇒ pas d’analyse lors de la requête HTTP
 
 * Identifie les fichiers à analyser (filtre S3)
 * Les télécharge : `ThreadPoolExecutor` + `TemporaryDirectory` :heart:
-* Analyse avec ClamAV : `subprocess.run()`
+* Analyse avec ClamAV : `subprocess.run()` 😎
 * Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
 ---
 # Mise en prod de la version *a minima*
 
 - Analyse quotidienne des nouveaux fichiers
-    * Parcours des objets S3 : environ 5 minutes
-    * Analyse : environ 5 minutes
+    * Parcours des objets S3 : 5 minutes
+    * Analyse : 5 minutes
 - Analyse mensuelle de tous les fichiers
-    * Parcours des objets S3 : environ 5 minutes
-    * Analyse : environ **17 280 minutes** *(ou 3 jours)*
-    * `SIGTERM` lors des déploiements chez CleverCloud (ZDD)
+    * Parcours des objets S3 : 5 minutes
+    * Analyse : **17 280 minutes** *(3 jours)*
+    * `SIGTERM` au déploiement (*Zero Downtime Deployment*)
 
 ---
 #  Pas très satisfaisant…
@@ -128,48 +154,103 @@ Latence perceptible ⇒ pas d’analyse lors de la requête HTTP
 Comment éviter les interruptions liées au déploiement ? 🤔
 
 * Pas de déploiement pendant 3 jours 🤨
-* Création d’un mécanisme de reprise
+* Création d’un **mécanisme de reprise**
     * Gestion du signal `SIGTERM` ⚠🐉
     * Quid d’un échec sans `SIGTERM` ?
-    * Acquittement : sous quel délai ?
-    * La réponse “D” : réfléchir plus…
+    * Acquittement — sous quel délai ?
+    * La **réponse “D”** : réfléchir plus…
 
 ---
+<style scoped>
+strong {
+font-size: 1.3em;
+}
+</style>
+
 # Analyse (en mieux)
+
 `cron`
+
 - Identifie **mieux** les fichiers à analyser
 - Les télécharge : `ThreadPoolExecutor` + `TemporaryDirectory` :heart:
 - Analyse avec ClamAV : `subprocess.run()`
 - Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
 ---
-# Analyse (en mieux)
+# Préparation de l’analyse
 
-**Une fois par jour**
+#### Une fois par jour
 
 `cron` synchronisation S3 → base de données
+
+#### Plein de fois par jour
+
+Sélection intelligente du lot de fichiers
+- récents, ou
+- dernière analyse > 1 mois
 
 ---
-# Analyse (en mieux)
-
-**Une fois par jour**
-
-`cron` synchronisation S3 → base de données
-
-**Plein de fois par jour**
-
-Sélection d’un lot de fichiers (récents ou dernière analyse > un mois)
+# Sélection du lot de fichiers
 
 ```python
 select_for_update(skip_locked=True, no_key=True)
 ```
 
 ---
+# Sélection du lot de fichiers
+
+```python
+select_for_update(skip_locked=True, no_key=True)
+```
+
+`no_key=True` :
+
+```sql
+psql# CREATE TABLE files(id BIGINT PRIMARY KEY);
+psql# CREATE TABLE avscan(file_id BIGINT REFERENCES files (id));
+psql# INSERT INTO files VALUES (1);
+```
+
+---
+# Sélection du lot de fichiers
+
+```python
+select_for_update(skip_locked=True, no_key=True)
+```
+
+`no_key=True` :
+
+```sql
+psql1# BEGIN;
+psql1# SELECT * FROM files WHERE id=1 FOR NO KEY UPDATE;
+psql2# BEGIN;
+psql2# INSERT INTO avscan VALUES (1);
+-- retourne immédiatement
+```
+
+---
+# Sélection du lot de fichiers
+
+```python
+select_for_update(skip_locked=True, no_key=True)
+```
+
+`no_key=False` :
+
+```sql
+psql1# BEGIN;
+psql1# SELECT * FROM files WHERE id=1 FOR NO KEY UPDATE;
+psql2# BEGIN;
+psql2# INSERT INTO avscan VALUES (1);
+-- bloqué tant que psql1# n’a pas commit.
+```
+
+---
 # Analyse (en mieux)
 
 Que nous apporte la base de données ?
-* Nettoyage automatique du verrou en cas d’échec
-* Gestion de la concurrence
+* **Mécanisme de reprise** : verrou nettoyé en cas d’échec
+* Gestion de la **concurrence**
 * Cerise sur le gâteau ?
     * Elle est déjà en place.
 
