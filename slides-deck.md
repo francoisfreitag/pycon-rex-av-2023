@@ -255,6 +255,21 @@ Que nous apporte la base de données ?
     * Elle est déjà en place.
 
 ---
+# Le résultat 🥁
+
+624 375 fichiers scannés pour trouver…
+
+---
+<style scoped>
+h2 {text-align: center; font-size: 3em; margin-top: 1em;}
+</style>
+# Le résultat 🥁
+
+624 375 fichiers scannés pour trouver…
+
+## Aucun virus 🕺
+
+---
 <style scoped>
 p > img {
     margin-left: 300px;
@@ -262,35 +277,26 @@ p > img {
 </style>
 # Une analyse dans l’admin Django
 
+<!-- TODO:
+- Parler des méta-données stockées plutôt qu’une image pas claire
+- Décrire le process (support qui vient régulièrement)
+- Dire que l’accès via l’admin django est possible
+-->
+
 ![height:400px](img/admin-detail.png)
-
----
-# Le résultat 🥁
-
-624 375 fichiers scannés pour trouver…
-
----
-<style scoped>
-h2 {text-align: center}
-</style>
-# Le résultat 🥁
-
-624 375 fichiers scannés pour trouver…
-
-## 0 virus 🕺
 
 ---
 # Comment aller plus loin ?
 
-- Stocker les fichiers via Django
-- Zone de quarantaine S3
-- Parallélisation des analyses
-- Gestion des fichiers infectés : *API* VirusTotal
+* Stocker les fichiers via Django
+* Zone de quarantaine S3
+* Parallélisation des analyses
+* Gestion des fichiers infectés : *API* VirusTotal
 
 ---
-# Je peux voir le code ?
+# Où voir le code ?
 
-C’est open-source, ça fait 129 lignes.
+129 lignes :
 
 <!-- QR Code -->
 https://github.com/betagouv/itou/blob/master/itou/antivirus/management/commands/scan_s3_files.py
