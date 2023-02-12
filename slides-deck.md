@@ -50,6 +50,7 @@ li {
     flex-direction: column;
     align-items: center;
     margin-top: 1em;
+    margin-bottom: 1em;
 }
 li > a {
     margin-top: 0.7em;
@@ -60,8 +61,11 @@ li > a {
 
 > Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
 
-- ![height:120px](img/logo-plateforme-inclusion.svg) https://inclusion.beta.gouv.fr/
-- ![height:120px](img/beta-gouv.png) https://beta.gouv.fr/
+- ![height:90px](img/beta-gouv.png)
+- ![height:90px](img/logo-plateforme-inclusion.svg)
+- ![height:90px](img/logo-emplois.svg)
+
+Code open-source : https://github.com/betagouv/itou/
 
 ---
 <style scoped>
@@ -73,11 +77,12 @@ ul {
 
 # Les emplois de l’inclusion
 
-> Mise en relation d'employeurs solidaires avec des candidats éloignés de l'emploi.
+> **Mise en relation** d’employeurs solidaires avec des candidats éloignés de l'emploi.
 
-Code open-source : https://github.com/betagouv/itou/
+* ⇒ Processus de candidature : **CV 🖹**
 
-* Gestion des candidatures : **CV 🖹**
+---
+# Audit de sécurité
 
 ---
 <style scoped>
@@ -91,14 +96,14 @@ margin-top: 50px;
 
 ⚠ Pas de vérification antivirus des fichiers servis par la plateforme.
 
-## 🐛 🖹 ?
+## 🖹 🐛 ?
 
 ---
 # Contraintes pour l’analyse antivirus
 
 * 500 000+ **🖹**
-* Pas de latence perceptible à l’envoi (exigence métier)
-* Envoi direct des documents sur S3 pour des raisons historiques
+* Envoyés directement sur S3 pour des raisons historiques
+* Pas de **latence perceptible** à l’envoi (exigence métier)
 
 ---
 # Quel antivirus ?
@@ -109,13 +114,13 @@ margin-top: 50px;
 - *PaaS* CleverCloud : `CC_CLAMAV=1`
 
 ---
-# Test de performance de ClamAV :turtle:
+# Test de performance de ClamAV
 
 Échantillon de 10 000 fichiers aléatoires.
 
 Temps d’analyse par fichier :
 - En moyenne : 1 seconde
-- Maximum : 20 secondes
+- Maximum : 20 secondes :turtle:
 
 **Latence perceptible** ⇒ pas d’analyse à l’envoi (requête HTTP)
 
@@ -128,12 +133,12 @@ Pas de latence perceptible, mais moins de sécurité.
 - **Mensuelle** de tous les fichiers : nouvelles signatures de virus
 
 ---
-# Analyse *a minima*
+# Analyse périodique *a minima*
 
 `cron` :
 
 * Identifie les fichiers à analyser (filtre S3)
-* Les télécharge : `ThreadPoolExecutor` + `TemporaryDirectory` :heart:
+* Les télécharge : `TemporaryDirectory` + `ThreadPoolExecutor` :heart:
 * Analyse avec ClamAV : `subprocess.run()` 😎
 * Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
@@ -158,7 +163,7 @@ Comment éviter les interruptions liées au déploiement ? 🤔
     * Gestion du signal `SIGTERM` ⚠🐉
     * Quid d’un échec sans `SIGTERM` ?
     * Acquittement — sous quel délai ?
-    * La **réponse “D”** : réfléchir plus…
+    * La **réponse D** : réfléchir plus…
 
 ---
 <style scoped>
@@ -167,16 +172,28 @@ font-size: 1.3em;
 }
 </style>
 
-# Analyse (en mieux)
+# Analyse périodique en mieux
 
 `cron`
 
 - Identifie **mieux** les fichiers à analyser
-- Les télécharge : `ThreadPoolExecutor` + `TemporaryDirectory` :heart:
+- Les télécharge : `TemporaryDirectory` + `ThreadPoolExecutor` :heart:
 - Analyse avec ClamAV : `subprocess.run()`
 - Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
 ---
+<style scoped>
+h4 {
+margin-top: 1em;
+margin-bottom: 0;
+}
+p {
+margin-top: 0.5em;
+}
+ul {
+margin-top: 0.25em;
+}
+</style>
 # Préparation de l’analyse
 
 #### Une fois par jour
@@ -203,29 +220,12 @@ select_for_update(skip_locked=True, no_key=True)
 select_for_update(skip_locked=True, no_key=True)
 ```
 
-`no_key=True` :
+Préparation :
 
 ```sql
 psql# CREATE TABLE files(id BIGINT PRIMARY KEY);
 psql# CREATE TABLE avscan(file_id BIGINT REFERENCES files (id));
 psql# INSERT INTO files VALUES (1);
-```
-
----
-# Sélection du lot de fichiers
-
-```python
-select_for_update(skip_locked=True, no_key=True)
-```
-
-`no_key=True` :
-
-```sql
-psql1# BEGIN;
-psql1# SELECT * FROM files WHERE id=1 FOR NO KEY UPDATE;
-psql2# BEGIN;
-psql2# INSERT INTO avscan VALUES (1);
--- retourne immédiatement
 ```
 
 ---
@@ -246,9 +246,25 @@ psql2# INSERT INTO avscan VALUES (1);
 ```
 
 ---
-# Analyse (en mieux)
+# Sélection du lot de fichiers
 
-Que nous apporte la base de données ?
+```python
+select_for_update(skip_locked=True, no_key=True)
+```
+
+`no_key=True` :
+
+```sql
+psql1# BEGIN;
+psql1# SELECT * FROM files WHERE id=1 FOR NO KEY UPDATE;
+psql2# BEGIN;
+psql2# INSERT INTO avscan VALUES (1);
+-- retourne immédiatement
+```
+
+---
+# Qu’apporte la base de données ?
+
 * **Mécanisme de reprise** : verrou nettoyé en cas d’échec
 * Gestion de la **concurrence**
 * Cerise sur le gâteau ?
@@ -278,9 +294,9 @@ p > img {
 # Une analyse dans l’admin Django
 
 <!-- TODO:
-- Parler des méta-données stockées plutôt qu’une image pas claire
-- Décrire le process (support qui vient régulièrement)
-- Dire que l’accès via l’admin django est possible
+- Décrire le process (support surveille tous les jours)
+- Accès via l’admin django
+- Parler des méta-données stockées
 -->
 
 ![height:400px](img/admin-detail.png)
