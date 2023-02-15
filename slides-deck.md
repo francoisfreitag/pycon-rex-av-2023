@@ -138,7 +138,7 @@ Pas de latence perceptible, mais moins de sécurité.
 `cron` :
 
 * Identifie les fichiers à analyser (filtre S3)
-* Les télécharge : `TemporaryDirectory` + `ThreadPoolExecutor` :heart:
+* Télécharge un lot : `TemporaryDirectory` + `ThreadPoolExecutor` :heart:
 * Analyse avec ClamAV : `subprocess.run()` 😎
 * Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
@@ -177,7 +177,7 @@ font-size: 1.3em;
 `cron`
 
 - Identifie **mieux** les fichiers à analyser
-- Les télécharge : `TemporaryDirectory` + `ThreadPoolExecutor` :heart:
+- Télécharge un lot : `TemporaryDirectory` + `ThreadPoolExecutor` :heart:
 - Analyse avec ClamAV : `subprocess.run()`
 - Enregistre le résultat dans la base de données : *ORM* Django :heart:
 
@@ -285,21 +285,24 @@ h2 {text-align: center; font-size: 3em; margin-top: 1em;}
 
 ## Aucun virus 🕺
 
+<!-- On a testé, les virus envoyés sur la plateforme sont bien reconnus. -->
+
 ---
-<style scoped>
-p > img {
-    margin-left: 300px;
-}
-</style>
-# Une analyse dans l’admin Django
+# Comment un virus serait traité ?
 
-<!-- TODO:
-- Décrire le process (support surveille tous les jours)
-- Accès via l’admin django
-- Parler des méta-données stockées
--->
+- Admin django
 
-![height:400px](img/admin-detail.png)
+---
+# Données de l’analyse
+
+```python
+class Scan(models.Model):
+    file = models.OneToOneField(File)
+    signature = models.TextField()
+    completed_at = models.DateTimeField(null=True)
+    infected = models.BooleanField(null=True)
+    comment = models.TextField()
+```
 
 ---
 # Comment aller plus loin ?
@@ -311,11 +314,18 @@ p > img {
 
 ---
 # Où voir le code ?
+<style scoped>
+p > img {
+    display: block;
+    margin: auto;
+}
+</style>
 
 129 lignes :
 
-<!-- QR Code -->
 https://github.com/betagouv/itou/blob/master/itou/antivirus/management/commands/scan_s3_files.py
+
+![height:200px](img/qrcode.svg)
 
 ---
 <style scoped>
