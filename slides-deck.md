@@ -59,7 +59,7 @@ li > a {
 
 # Plateforme de l’inclusion
 
-> Faciliter la vie des personnes en insertion et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
+> Faciliter la vie des **personnes en insertion** et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
 
 - ![height:90px](img/beta-gouv.png)
 - ![height:90px](img/logo-plateforme-inclusion.svg)
