@@ -77,6 +77,8 @@ ul {
 
 # Les emplois de l’inclusion
 
+https://emplois.inclusion.beta.gouv.fr
+
 > **Mise en relation** d’employeurs solidaires avec des candidats éloignés de l'emploi.
 
 * ⇒ Processus de candidature : **CV 🖹**
@@ -239,7 +241,7 @@ select_for_update(skip_locked=True, no_key=True)
 
 ```sql
 psql1# BEGIN;
-psql1# SELECT * FROM files WHERE id=1 FOR NO KEY UPDATE;
+psql1# SELECT * FROM files WHERE id=1 FOR UPDATE;
 psql2# BEGIN;
 psql2# INSERT INTO avscan VALUES (1);
 -- bloqué tant que psql1# n’a pas commit.
@@ -290,7 +292,10 @@ h2 {text-align: center; font-size: 3em; margin-top: 1em;}
 ---
 # Comment un virus serait traité ?
 
-- Admin django
+* Équipe **support** vérifie **quotidiennement** les rapports antivirus
+* Confirmation que le fichier est vérolé
+* Identification du **type de document** infecté
+* Choix de la rémédiation
 
 ---
 # Données de l’analyse

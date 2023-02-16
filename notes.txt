@@ -1,0 +1,71 @@
+Plateforme de l’inclusion
+#########################
+
+Beta.gouv :
+- modernisation govt
+- incubateur
+- équipe projet dirigée par intrapreneur
+- code open-source
+
+Plateforme inclusion :
+- IAE
+- Dizaine équipes projets
+
+Les emplois
+###########
+
+Audit de sécurité
+#################
+
+- Audit régulier
+- Assurer la sécurité des usagers
+
+Contraintes analyse
+###################
+
+Quel antivirus
+##############
+
+Test perf
+#########
+
+Analyse périodique
+##################
+
+Analyse périodique a minima
+###########################
+
+MEP a minima
+############
+
+Pas très satisfaisant
+#####################
+
+Analyse périodique en mieux
+###########################
+
+Préparation de l’analyse
+########################
+
+Sélection du lot de fichiers
+############################
+
+Qu’apporte la base de données
+#############################
+
+Le résultat
+###########
+
+- Vérifié avec un fichier infecté
+
+Comment un virus serait traité ?
+################################
+
+Données de l’analyse
+####################
+
+Comment aller plus loin ?
+#########################
+
+Où voir le code ?
+#################
