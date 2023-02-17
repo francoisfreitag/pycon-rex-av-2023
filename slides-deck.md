@@ -59,13 +59,11 @@ li > a {
 
 # Plateforme de l’inclusion
 
-> Faciliter la vie des **personnes en insertion** et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
-
 - ![height:90px](img/beta-gouv.png)
 - ![height:90px](img/logo-plateforme-inclusion.svg)
 - ![height:90px](img/logo-emplois.svg)
 
-Code open-source : https://github.com/betagouv/itou/
+> Faciliter la vie des **personnes en insertion** et de celles et ceux qui les accompagnent à travers de nouveaux services publics.
 
 ---
 <style scoped>
@@ -78,6 +76,8 @@ ul {
 # Les emplois de l’inclusion
 
 https://emplois.inclusion.beta.gouv.fr
+
+Code open-source : https://github.com/betagouv/itou/
 
 > **Mise en relation** d’employeurs solidaires avec des candidats éloignés de l'emploi.
 
@@ -298,7 +298,7 @@ h2 {text-align: center; font-size: 3em; margin-top: 1em;}
 * Choix de la rémédiation
 
 ---
-# Données de l’analyse
+# Données d’une analyse
 
 ```python
 class Scan(models.Model):
